@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Website chúc mừng tốt nghiệp đặc biệt - Dành cho người tôi yêu quý" />
+  <title>🎓 Chúc Mừng Tốt Nghiệp</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600&family=Dancing+Script:wght@600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ========== FAKE LOADING SCREEN (Bonus: Fake loader → surprise reveal) ========== -->
+  <div id="loading-screen">
+    <div class="loader-content">
+      <div class="loader-ring"></div>
+      <p class="loader-text">Đang chuẩn bị điều đặc biệt<span class="dots">...</span></p>
+      <div class="loader-progress-bar">
+        <div class="loader-progress-fill" id="progress-fill"></div>
+      </div>
+      <p class="loader-percent" id="loader-percent">0%</p>
+    </div>
+  </div>
+
+  <!-- ========== AUDIO PLAYER ========== -->
+  <div id="audio-btn" title="Bật/Tắt nhạc nền">
+    <span id="audio-icon">🎵</span>
+  </div>
+  <!-- Nhạc nền: thay src bằng đường dẫn file nhạc của bạn -->
+  <audio id="bg-music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ========== LANDING PAGE ========== -->
+  <section id="landing-page">
+    <!-- Floating particles background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="landing-content">
+      <!-- Animated stars -->
+      <div class="stars-wrapper">
+        <span class="star s1">✦</span>
+        <span class="star s2">✦</span>
+        <span class="star s3">✧</span>
+        <span class="star s4">✦</span>
+        <span class="star s5">✧</span>
+      </div>
+
+      <p class="landing-subtitle">Gửi tới</p>
+      <h1 class="landing-name" id="recipient-name">Trần Bạch Tố Như</h1>
+      <h2 class="landing-title">Chúc Mừng Tốt Nghiệp</h2>
+      <span class="landing-icon">🎓</span>
+
+      <p class="landing-desc">Một hành trình đáng tự hào đã hoàn thành.</p>
+
+      <!-- Mini game: bấm nút đúng lần để mở quà -->
+      <div class="gift-game" id="gift-game">
+        <p class="game-hint" id="game-hint">Nhấn vào hộp quà để mở 🎁</p>
+        <div id="gift-box" class="gift-box" onclick="handleGiftClick()">
+          <div class="gift-lid" id="gift-lid">🎁</div>
+          <div class="gift-progress">
+            <div class="gift-progress-bar" id="gift-progress-bar"></div>
+          </div>
+          <p class="gift-click-count" id="gift-click-count">0 / 5</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main id="main-content" class="hidden">
+
+    <!-- Story progress bar -->
+    <div id="story-progress-bar">
+      <div id="story-progress-fill"></div>
+    </div>
+
+    <!-- ---- SECTION 1: Typing Message ---- -->
+    <section class="story-section active" id="section-1">
+      <div class="section-inner">
+        <div class="section-badge">Chương I</div>
+        <h2 class="section-title">Một Hành Trình Đã Kết Thúc...</h2>
+        <div class="typing-container">
+          <p class="typing-text" id="typing-text"></p>
+          <span class="typing-cursor">|</span>
+        </div>
+        <div class="floating-emoji">🌸</div>
+      </div>
+      <button class="story-btn" id="btn-next-1" onclick="showSection(2)" style="display:none">
+        Tiếp theo →
+      </button>
+    </section>
+
+    <!-- ---- SECTION 2: Memory Slideshow ---- -->
+    <section class="story-section hidden-section" id="section-2">
+      <div class="section-inner">
+        <div class="section-badge">Chương II</div>
+        <h2 class="section-title">Những Kỷ Niệm Đẹp 📸</h2>
+        <div class="slideshow-container" id="slideshow">
+          <div class="slide active-slide">
+            <img src="photos/photo1.jpg" alt="Kỷ niệm 1" onerror="this.parentElement.classList.add('no-img')" />
+            <div class="slide-caption">Ngày đầu tiên bước vào giảng đường 🏫</div>
+          </div>
+          <div class="slide">
+            <img src="photos/photo2.jpg" alt="Kỷ niệm 2" onerror="this.parentElement.classList.add('no-img')" />
+            <div class="slide-caption">Những đêm thức khuya ôn bài 📚</div>
+          </div>
+          <div class="slide">
+            <img src="photos/photo3.jpg" alt="Kỷ niệm 3" onerror="this.parentElement.classList.add('no-img')" />
+            <div class="slide-caption">Và cuối cùng... là ngày hôm nay 🎓</div>
+          </div>
+          <!-- Fallback nếu không có ảnh thật -->
+          <div class="slide-fallback" id="slide-fallback">
+            <div class="memory-card">
+              <div class="memory-emoji">📚</div>
+              <p>Ngày đầu tiên nhập học</p>
+              <span>Bỡ ngỡ nhưng đầy háo hức</span>
+            </div>
+          </div>
+        </div>
+        <!-- Slideshow controls -->
+        <div class="slideshow-nav">
+          <button class="slide-btn" id="slide-prev" onclick="changeSlide(-1)">‹</button>
+          <div class="slide-dots" id="slide-dots"></div>
+          <button class="slide-btn" id="slide-next" onclick="changeSlide(1)">›</button>
+        </div>
+      </div>
+      <button class="story-btn" onclick="showSection(3)">Tiếp theo →</button>
+    </section>
+
+    <!-- ---- SECTION 3: Personal Message ---- -->
+    <section class="story-section hidden-section" id="section-3">
+      <div class="section-inner">
+        <div class="section-badge">Chương III</div>
+        <h2 class="section-title">Lời Nhắn Từ Con Tim 💌</h2>
+        <div class="message-card">
+          <p class="message-text" id="personal-message">
+            <!-- Nội dung được điền từ script.js -->
+          </p>
+          <div class="message-signature">
+            — <span id="sender-name">Người thân của bạn</span> 💛
+          </div>
+        </div>
+      </div>
+      <button class="story-btn" onclick="showSection(4)">Tiếp theo →</button>
+    </section>
+
+    <!-- ---- SECTION 4: Hidden Surprise ---- -->
+    <section class="story-section hidden-section" id="section-4">
+      <div class="section-inner">
+        <div class="section-badge">✨ Bí Mật</div>
+        <h2 class="section-title">Điều Đặc Biệt Nhất...</h2>
+        <div class="surprise-box" id="surprise-box">
+          <div class="surprise-lock" id="surprise-lock">
+            <span>🔒</span>
+            <p>Bấm <strong id="lock-remain">7</strong> lần để mở khóa bí mật</p>
+            <div class="lock-stars" id="lock-stars"></div>
+          </div>
+          <div class="surprise-content hidden" id="surprise-content">
+            <div class="surprise-envelope">💌</div>
+            <p class="surprise-text" id="surprise-text">
+              <!-- Điền từ script.js -->
+            </p>
+            <div class="surprise-confetti-btn" onclick="launchCelebration()">
+              🎉 Ăn mừng nào!
+            </div>
+          </div>
+        </div>
+        <p class="hint-text" id="hint-text">← Bấm vào hộp bí mật bên trên</p>
+      </div>
+      <button class="story-btn final-btn" onclick="showFinalScreen()">
+        🎓 Hoàn thành hành trình
+      </button>
+    </section>
+
+    <!-- ---- FINAL SCREEN ---- -->
+    <section class="story-section hidden-section" id="section-final">
+      <div class="section-inner final-inner">
+        <div class="final-cap">🎓</div>
+        <h2 class="final-title">Chúc Mừng!</h2>
+        <p class="final-name" id="final-recipient-name">Nguyễn Văn A</p>
+        <p class="final-tagline">Bạn đã làm được rồi. Thật tuyệt vời! 🌟</p>
+        <div class="final-wishes">
+          <div class="wish-item">🌈 Thành công rực rỡ</div>
+          <div class="wish-item">💪 Sức khỏe dồi dào</div>
+          <div class="wish-item">❤️ Hạnh phúc mãi mãi</div>
+          <div class="wish-item">🚀 Tương lai xán lạn</div>
+        </div>
+        <button class="restart-btn" onclick="restartWebsite()">↩ Xem lại từ đầu</button>
+        <button class="celebrate-btn" onclick="launchCelebration()">🎊 Ăn mừng thêm!</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating petals -->
+  <div id="petals-container"></div>
+
+  <!-- Main Script -->
+  <script src="script.js"></script>
+</body>
+
+</html>
